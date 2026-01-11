@@ -1,8 +1,6 @@
-import logging
 from typing import Optional, Callable, Any
 import paho.mqtt.client as mqtt
-
-logger = logging.getLogger(__name__)
+from loguru import logger
 
 
 class MQTTClient:

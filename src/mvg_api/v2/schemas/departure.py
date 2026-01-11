@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-import math
 from typing import List, Optional
 
 from pydantic import BaseModel, RootModel
@@ -29,9 +28,9 @@ class Departure(BaseModel):
     def minutes_until_departure(self) -> int:
         return max(
             0,
-            math.ceil(
+            int(
                 (self.realtimeDepartureTime - datetime.now().timestamp() * 1000)
-                / 60_000
+                // 60_000
             ),
         )
 

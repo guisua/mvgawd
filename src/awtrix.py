@@ -1,9 +1,7 @@
 import json
-import logging
 from typing import Optional, Dict, Any
+from loguru import logger
 from src.mqtt_client import MQTTClient
-
-logger = logging.getLogger(__name__)
 
 
 class AwtrixDisplay:

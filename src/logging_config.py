@@ -1,4 +1,5 @@
 """Loguru logging configuration."""
+import os
 import sys
 from loguru import logger
 
@@ -13,6 +14,9 @@ def setup_logging():
         format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
         level="INFO",
     )
+    
+    # Ensure logs directory exists
+    os.makedirs("logs", exist_ok=True)
     
     # File handler with rotation
     logger.add(

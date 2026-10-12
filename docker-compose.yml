@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mvgawd:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mvgawd
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      # MQTT Broker Configuration
+      - MQTT_BROKER_HOST=${MQTT_BROKER_HOST:-localhost}
+      - MQTT_BROKER_PORT=${MQTT_BROKER_PORT:-1883}
+      
+      # Awtrix Display Configuration
+      - AWTRIX_TOPIC_PREFIX=${AWTRIX_TOPIC_PREFIX:-awtrix}
+      - AWTRIX_RAW_MESSAGE_SUBTOPIC=${AWTRIX_RAW_MESSAGE_SUBTOPIC:-custom/mvg}
+      
+      # MVG Station Configuration
+      - STATION_ID_TRAM=${STATION_ID_TRAM:-de:09162:1602}
+      - STATION_ID_UBAHN=${STATION_ID_UBAHN:-de:09162:280}
+      - STOP_POINT_ID_TRAM=${STOP_POINT_ID_TRAM:-de:09162:1602:2:1}
+      - STOP_POINT_ID_UBAHN=${STOP_POINT_ID_UBAHN:-de:09162:280:51:52}
+      
+      # Update Interval
+      - UPDATE_INTERVAL_SECONDS=${UPDATE_INTERVAL_SECONDS:-10}

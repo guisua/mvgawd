@@ -71,6 +71,33 @@ async def get_next_departures(
     return sorted(departures, key=lambda x: x.minutes_until_departure)[:count]
 
 
+LIVE_COLOR = "00FF00"
+
+# Awtrix font metrics: digits are 3x5 and advance 4 columns, the "'"
+# separator advances 2 columns; text drawn at y=2 has its bottom row at y=6
+DIGIT_ADVANCE = 4
+SEPARATOR_ADVANCE = 2
+TEXT_Y = 2
+TEXT_BOTTOM_Y = TEXT_Y + 4
+
+
+def live_indicators(text_x: int, departures: list) -> list:
+    """
+    Build the draw commands marking live departures with a green pixel.
+
+    The pixel replaces the bottom right pixel of the first digit of each live
+    departure, which is lit for every digit in the Awtrix font.
+    """
+    commands = []
+    x = text_x
+    for departure in departures:
+        minutes = str(departure.minutes_until_departure)
+        if departure.realtime:
+            commands.append({"dp": [x + 2, TEXT_BOTTOM_Y, LIVE_COLOR]})
+        x += len(minutes) * DIGIT_ADVANCE + SEPARATOR_ADVANCE
+    return commands
+
+
 def draw_stop(
     x: int, text_x: int, departures: list, bg_color: str, fg_color: str
 ) -> list:
@@ -81,14 +108,14 @@ def draw_stop(
         {
             "dt": [
                 text_x,
-                2,
+                TEXT_Y,
                 "'".join(
                     [str(departure.minutes_until_departure) for departure in departures]
                 ),
                 fg_color,
             ]
         },
-    ]
+    ] + live_indicators(text_x, departures)
 
 
 async def update_departures_display(

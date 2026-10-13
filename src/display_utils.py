@@ -55,6 +55,18 @@ async def get_next_departures(
         )
     ]
 
+    # Drop duplicate departures returned by the API, keeping the first occurrence
+    departures = list(
+        {
+            (
+                departure.plannedDepartureTime,
+                departure.label,
+                departure.stopPointGlobalId,
+            ): departure
+            for departure in reversed(departures)
+        }.values()
+    )
+
     # Next departures, in ceil minutes from now
     return sorted(departures, key=lambda x: x.minutes_until_departure)[:count]
 
